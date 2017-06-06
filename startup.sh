@@ -31,6 +31,26 @@ xdebug_enable()
 	php5enmod xdebug
 }
 
+codebase_init()
+{
+	echo-debug "Initializing codebase..."
+	cd /var/www
+
+	# Cleanup everything in the directory, including hidden files
+	shopt -s dotglob
+	rm -rf *
+
+	# Clone the codebase as the docker user
+	set -x
+	gosu docker git clone --branch="$GIT_BRANCH" --depth 50 "$GIT_URL" .
+	# Reset to a specific commit if passed
+	( [[ "$GIT_COMMIT" != '' ]] || [[ "$GIT_COMMIT" != '""' ]] ) &&
+		gosu docker git reset --hard "$GIT_COMMIT"
+	set +x
+
+	ls -la
+}
+
 # Docker user uid/gid mapping to the host user uid/gid
 # '""' is used as an empty variable designation in yml files (can't used empty vars without warnings from compose)
 # TODO: figure out a better way of checking for empty variables
@@ -40,6 +60,13 @@ xdebug_enable()
 
 # Enable xdebug
 [[ "$XDEBUG_ENABLED" != "0" ]] && xdebug_enable
+
+# Codebase initialization
+# '""' is used as an empty variable designation in yml files (can't used empty vars without warnings from compose)
+# TODO: figure out a better way of checking for empty variables
+( [[ "$GIT_URL" != '' ]] || [[ "$GIT_URL" != '""' ]] ) &&
+	( [[ "$GIT_BRANCH" != '' ]] || [[ "$GIT_BRANCH" != '""' ]] ) &&
+	codebase_init
 
 # Initialization steps completed. Create a pid file to mark the container is healthy
 echo-debug "Preliminary initialization completed"
