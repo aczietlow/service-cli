@@ -51,8 +51,8 @@ fi
 
 # Enable xdebug
 if [[ "${XDEBUG_ENABLED}" == "1" ]]; then
-  echo-debug "Enabling xdebug..."
-  sudo php5enmod xdebug
+  echo "Enabling xdebug..."
+  sudo phpenmod xdebug
 fi
 
 # Execute passed CMD arguments
