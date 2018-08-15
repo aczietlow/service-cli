@@ -162,6 +162,7 @@ RUN set -xe; \
 	docker-php-ext-configure >/dev/null ldap --with-libdir=lib/x86_64-linux-gnu/; \
 	# mssql can be install in PHP 5.6 only. pdo_dblib is available in PHP 7.0+ as well.
 	docker-php-ext-configure >/dev/null mssql --with-libdir=/lib/x86_64-linux-gnu/; \
+	docker-php-ext-configure >/dev/null mysql --with-libdir=/lib/x86_64-linux-gnu/; \
 	docker-php-ext-configure >/dev/null pdo_dblib --with-libdir=/lib/x86_64-linux-gnu/; \
 	docker-php-ext-configure >/dev/null pgsql --with-pgsql=/usr/local/pgsql/; \
 	\
@@ -177,6 +178,7 @@ RUN set -xe; \
 		ldap \
 		mcrypt \
 		mssql \
+		mysql \
 		mysqli \
 		opcache \
 		pcntl \
