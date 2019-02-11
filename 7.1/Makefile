@@ -13,13 +13,13 @@ VOLUMES += -v /home/docker
 .PHONY: build test push shell run start stop logs clean release
 
 build:
-	docker build -t $(REPO):$(TAG) .
+	docker build -t czietlow/service-cli:2.2-php7.1--with-phantomjs .
 
 test:
 	IMAGE=$(REPO):$(TAG) NAME=$(NAME) VERSION=$(VERSION) ../tests/test.bats
 
 push:
-	docker push $(REPO):$(TAG)
+	docker push czietlow/service-cli:2.2-php7.1--with-phantomjs
 
 run: clean
 	docker run --rm --name $(NAME) -it $(PORTS) $(VOLUMES) $(ENV) $(REPO):$(TAG)

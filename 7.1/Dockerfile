@@ -387,6 +387,29 @@ RUN set -xe; \
 	ln -s /var/www/.docksal/etc/php/php.ini /usr/local/etc/php/conf.d/zzz-php.ini; \
 	ln -s /var/www/.docksal/etc/php/php-fpm.conf /usr/local/etc/php-fpm.d/zzz-php-fpm.conf
 
+# Install PhantomJS
+RUN set -xe; \
+	apt-get update >/dev/null; \
+	apt-get -y --no-install-recommends install >/dev/null \
+		build-essential \
+		chrpath \
+		libssl-dev \
+		libxft-dev \
+		libfreetype6 \
+		libfreetype6-dev \
+		libfontconfig1 \
+		libfontconfig1-dev \
+	;\
+	# Cleanup
+	apt-get clean; rm -rf /var/lib/apt/lists/* ; \
+	cd ~; \
+	export PHANTOM_JS="phantomjs-1.9.8-linux-x86_64"; \
+	wget https://bitbucket.org/ariya/phantomjs/downloads/$PHANTOM_JS.tar.bz2; \
+	sudo tar xvjf $PHANTOM_JS.tar.bz2; \
+	sudo mv $PHANTOM_JS /usr/local/share; \
+	sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin;
+
+
 ENV \
 	# ssh-agent proxy socket (requires docksal/ssh-agent)
 	SSH_AUTH_SOCK=/.ssh-agent/proxy-socket \
